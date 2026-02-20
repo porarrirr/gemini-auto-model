@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gemini Mode Switcher</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <main class="popup-root">
+      <h1>Mode</h1>
+      <form id="mode-form" class="mode-form">
+        <label class="mode-option">
+          <input type="radio" name="forcedMode" value="pro" />
+          <span>Force Pro</span>
+        </label>
+        <label class="mode-option">
+          <input type="radio" name="forcedMode" value="thinking" />
+          <span>Force Thinking</span>
+        </label>
+      </form>
+      <p id="save-status" class="save-status" aria-live="polite"></p>
+      <button id="open-options" class="link-button" type="button">Open Options</button>
+    </main>
+    <script src="popup.js"></script>
+  </body>
+</html>

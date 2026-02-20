@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Gemini Pro Auto Default Settings</title>
+    <link rel="stylesheet" href="options.css" />
+  </head>
+  <body>
+    <main class="options-root">
+      <h1>Forced Model Mode</h1>
+      <p class="description">Choose which Gemini mode this extension should enforce on page load.</p>
+
+      <form id="mode-form" class="mode-form">
+        <label class="mode-option">
+          <input type="radio" name="forcedMode" value="pro" />
+          <span>Force Pro</span>
+        </label>
+
+        <label class="mode-option">
+          <input type="radio" name="forcedMode" value="thinking" />
+          <span>Force Thinking</span>
+        </label>
+      </form>
+
+      <p id="save-status" class="save-status" aria-live="polite"></p>
+    </main>
+
+    <script src="options.js"></script>
+  </body>
+</html>

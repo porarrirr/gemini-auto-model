@@ -2,10 +2,18 @@
   "manifest_version": 3,
   "name": "Gemini Pro Auto Default (Firefox)",
   "version": "0.1.0",
-  "description": "Automatically switches Gemini model to Pro on gemini.google.com.",
+  "description": "Automatically switches Gemini model to Pro or Thinking on gemini.google.com.",
+  "permissions": [
+    "storage"
+  ],
   "host_permissions": [
     "https://gemini.google.com/*"
   ],
+  "action": {
+    "default_title": "Gemini Mode Switcher",
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
   "content_scripts": [
     {
       "matches": [
