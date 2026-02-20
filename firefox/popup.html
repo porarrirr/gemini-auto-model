@@ -8,19 +8,32 @@
   </head>
   <body>
     <main class="popup-root">
-      <h1>Mode</h1>
+      <header class="popup-header">
+        <p class="eyebrow">Gemini Control</p>
+        <h1>Mode</h1>
+      </header>
+
       <form id="mode-form" class="mode-form">
         <label class="mode-option">
           <input type="radio" name="forcedMode" value="pro" />
-          <span>Force Pro</span>
+          <div class="option-content">
+            <span class="option-title">Force Pro</span>
+            <span class="option-note">Fast default</span>
+          </div>
         </label>
+
         <label class="mode-option">
           <input type="radio" name="forcedMode" value="thinking" />
-          <span>Force Thinking</span>
+          <div class="option-content">
+            <span class="option-title">Force Thinking</span>
+            <span class="option-note">Deep reasoning</span>
+          </div>
         </label>
       </form>
+
       <p id="save-status" class="save-status" aria-live="polite"></p>
-      <button id="open-options" class="link-button" type="button">Open Options</button>
+
+      <button id="open-options" class="link-button" type="button">Open full settings</button>
     </main>
     <script src="popup.js"></script>
   </body>

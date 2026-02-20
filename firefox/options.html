@@ -8,22 +8,35 @@
   </head>
   <body>
     <main class="options-root">
-      <h1>Forced Model Mode</h1>
-      <p class="description">Choose which Gemini mode this extension should enforce on page load.</p>
+      <header class="hero">
+        <p class="eyebrow">Gemini Pro Auto Default</p>
+        <h1>Forced Model Mode</h1>
+        <p class="description">Select the mode this extension should enforce when Gemini opens.</p>
+      </header>
 
       <form id="mode-form" class="mode-form">
         <label class="mode-option">
-          <input type="radio" name="forcedMode" value="pro" />
-          <span>Force Pro</span>
+          <input id="mode-pro" type="radio" name="forcedMode" value="pro" />
+          <div class="option-content">
+            <span class="option-title">Force Pro</span>
+            <span class="option-note">Faster responses for everyday use.</span>
+          </div>
+          <span class="option-badge">Recommended</span>
         </label>
 
         <label class="mode-option">
-          <input type="radio" name="forcedMode" value="thinking" />
-          <span>Force Thinking</span>
+          <input id="mode-thinking" type="radio" name="forcedMode" value="thinking" />
+          <div class="option-content">
+            <span class="option-title">Force Thinking</span>
+            <span class="option-note">More deliberate reasoning for complex prompts.</span>
+          </div>
         </label>
       </form>
 
-      <p id="save-status" class="save-status" aria-live="polite"></p>
+      <div class="status-row">
+        <p id="save-status" class="save-status" aria-live="polite"></p>
+        <p class="hint">Changes are saved automatically.</p>
+      </div>
     </main>
 
     <script src="options.js"></script>

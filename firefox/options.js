@@ -45,6 +45,18 @@
     statusElement.classList.toggle("error", Boolean(isError));
   }
 
+  function updateOptionSelectionState() {
+    if (!form) {
+      return;
+    }
+
+    const options = form.querySelectorAll(".mode-option");
+    options.forEach((option) => {
+      const input = option.querySelector('input[name="forcedMode"]');
+      option.classList.toggle("is-selected", Boolean(input && input.checked));
+    });
+  }
+
   function setSelectedMode(mode) {
     if (!form) {
       return;
@@ -53,12 +65,13 @@
     if (input) {
       input.checked = true;
     }
+    updateOptionSelectionState();
   }
 
   function loadMode() {
     const storage = getSyncStorage();
     if (!storage) {
-      showStatus("Extension storage API is unavailable.", true);
+      showStatus("Storage API is unavailable.", true);
       setSelectedMode(DEFAULT_FORCED_MODE);
       return;
     }
@@ -80,7 +93,7 @@
   function saveMode(mode) {
     const storage = getSyncStorage();
     if (!storage) {
-      showStatus("Extension storage API is unavailable.", true);
+      showStatus("Storage API is unavailable.", true);
       return;
     }
 
@@ -116,6 +129,7 @@
 
       const mode = normalizeMode(target.value);
       saveMode(mode);
+      updateOptionSelectionState();
     });
   }
 

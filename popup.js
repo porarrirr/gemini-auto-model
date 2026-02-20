@@ -46,6 +46,18 @@
     statusElement.classList.toggle("error", Boolean(isError));
   }
 
+  function updateOptionSelectionState() {
+    if (!form) {
+      return;
+    }
+
+    const options = form.querySelectorAll(".mode-option");
+    options.forEach((option) => {
+      const input = option.querySelector('input[name="forcedMode"]');
+      option.classList.toggle("is-selected", Boolean(input && input.checked));
+    });
+  }
+
   function setSelectedMode(mode) {
     if (!form) {
       return;
@@ -54,6 +66,7 @@
     if (input) {
       input.checked = true;
     }
+    updateOptionSelectionState();
   }
 
   function loadMode() {
@@ -93,6 +106,11 @@
       }
 
       showStatus("Saved", false);
+      setTimeout(() => {
+        if (statusElement && statusElement.textContent === "Saved") {
+          showStatus("", false);
+        }
+      }, 1000);
     });
   }
 
@@ -109,6 +127,7 @@
 
         const mode = normalizeMode(target.value);
         saveMode(mode);
+        updateOptionSelectionState();
       });
     }
 
