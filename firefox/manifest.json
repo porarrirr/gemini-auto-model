@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "Gemini Pro Auto Default (Firefox)",
+  "version": "0.1.0",
+  "description": "Automatically switches Gemini model to Pro on gemini.google.com.",
+  "host_permissions": [
+    "https://gemini.google.com/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://gemini.google.com/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}
