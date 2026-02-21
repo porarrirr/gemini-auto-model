@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Gemini Pro Auto Default (Firefox)",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Automatically switches Gemini model to Pro or Thinking on gemini.google.com.",
   "permissions": [
     "storage"
