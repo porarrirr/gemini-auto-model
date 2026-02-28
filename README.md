@@ -1,71 +1,72 @@
-# Gemini Pro Auto Default (Chrome/Firefox Extension)
+# Gemini Pro Auto Default (Chrome / Firefox / Safari iOS build-ready)
 
-This extension automatically switches the selected model on `https://gemini.google.com/`.
+This extension automatically switches the selected Gemini model on `https://gemini.google.com/`.
 
-## What It Does
+## What it does
 
-- Runs on every page view at `gemini.google.com`.
-- Chrome version lets you choose a forced mode: `Pro` or `Thinking`.
-- Detects whether the active model already matches the selected mode.
-- If not, it opens the model picker and selects a matching entry.
-- Works with SPA navigation (for example, creating a new chat without full reload).
-- If the target mode is unavailable, it fails silently and logs to DevTools console only.
+- Runs on every page at `gemini.google.com`.
+- Lets you choose a forced mode: `Pro` or `Thinking`.
+- Detects current model and only opens the picker if a switch is needed.
+- Re-checks on SPA navigation and DOM changes.
+- Fails silently when target mode is missing (console logs only).
 
-## Install (Chrome, Unpacked)
+## Browser installs
 
-1. Open `chrome://extensions`.
-2. Enable `Developer mode` (top-right).
-3. Click `Load unpacked`.
-4. Select this folder: `geminicom`.
-5. Open `https://gemini.google.com/` and verify the model switches to `Pro`.
-
-## Chrome Settings (Pro / Thinking)
-
-### Quick Switch from Toolbar Icon
-
-1. Click the extension icon in Chrome toolbar.
-2. Select `Force Pro` or `Force Thinking` in the popup.
-3. Reload `https://gemini.google.com/` if needed.
-
-### Open Full Options Page
+### Chrome (unpacked)
 
 1. Open `chrome://extensions`.
-2. Find this extension and click **Details**.
-3. Click **Extension options**.
-4. Select one mode:
-   - `Force Pro`
-   - `Force Thinking`
-5. Reload `https://gemini.google.com/`.
+2. Enable `Developer mode`.
+3. Click **Load unpacked** and choose this repo folder.
+4. Open `https://gemini.google.com/` and verify behavior.
 
-## Install (Firefox, Temporary Add-on)
+### Firefox (temporary add-on)
 
 1. Open `about:debugging#/runtime/this-firefox`.
 2. Click **Load Temporary Add-on...**.
-3. Select this file: `firefox/manifest.json`.
-4. Open `https://gemini.google.com/` and verify the model switches to `Pro` (Firefox build remains Pro-only).
+3. Select `firefox/manifest.json`.
+4. Open `https://gemini.google.com/` and verify behavior.
+
+## iOS Safari packaging (iPhone, iOS 17+)
+
+This repo includes macOS scripts and CI workflow to generate an unsigned iOS archive for a Safari Web Extension host app.
+
+- Local docs: `docs/ios-safari.md`
+- CI workflow: `.github/workflows/ios-unsigned-build.yml`
+- Converter/build scripts:
+  - `scripts/ios/prepare-safari-project.sh`
+  - `scripts/ios/build-unsigned-archive.sh`
+
+### Quick local commands (macOS)
+
+```bash
+bash scripts/ios/prepare-safari-project.sh
+bash scripts/ios/build-unsigned-archive.sh
+```
+
+Default output:
+
+- `build/ios/geminicom-ios17-unsigned.xcarchive`
+- `build/ios/xcodebuild.log`
+
+## Settings UI
+
+- Toolbar popup: quick `Pro` / `Thinking` toggle
+- Options page: persistent setting with auto-save
+- Storage behavior: tries `sync`, falls back to `local` automatically for compatibility
 
 ## Files
 
-- `manifest.json`: MV3 extension manifest.
-- `content.js`: DOM observer + model-switch logic.
-- `popup.html`: toolbar popup for quick mode switching.
-- `popup.js`: popup read/save logic via `chrome.storage.sync`.
-- `popup.css`: popup styling.
-- `options.html`: Chrome extension options page.
-- `options.js`: options read/save logic via `chrome.storage.sync`.
-- `options.css`: options page styling.
-- `icons/.gitkeep`: placeholder folder for optional future icons.
-- `firefox/manifest.json`: MV3 manifest for Firefox.
-- `firefox/content.js`: Firefox runtime logic (Pro-only behavior).
-
-## Notes and Limits
-
-- Gemini UI changes can break selectors; update candidate selectors in `content.js` if needed.
-- No notifications are shown for failures by design.
-- This extension does not store personal data.
+- `manifest.json`: Chrome/WebExtension manifest (MV3)
+- `extension-api.js`: runtime + storage compatibility adapter (`browser`/`chrome`, `sync`/`local`)
+- `content.js`: model detection and auto-switch runtime logic
+- `popup.*`: toolbar popup UI and logic
+- `options.*`: options page UI and logic
+- `firefox/`: Firefox manifest + same runtime/UI scripts
+- `docs/ios-safari.md`: iPhone Safari setup and troubleshooting guide
+- `scripts/ios/`: Safari converter + unsigned archive scripts
 
 ## Debugging
 
 1. Open Gemini page.
-2. Open DevTools Console.
-3. Filter logs by prefix: `[gemini-pro-auto-default]`.
+2. Open DevTools/Web Inspector console.
+3. Filter logs by `[gemini-pro-auto-default]`.

@@ -5,6 +5,7 @@
   const MODE_PRO = "pro";
   const MODE_THINKING = "thinking";
   const DEFAULT_FORCED_MODE = MODE_PRO;
+  const extensionBridge = globalThis.__geminiExt || null;
 
   const form = document.getElementById("mode-form");
   const statusElement = document.getElementById("save-status");
@@ -15,26 +16,6 @@
 
   function normalizeMode(value) {
     return isValidMode(value) ? value : DEFAULT_FORCED_MODE;
-  }
-
-  function getSyncStorage() {
-    if (
-      typeof chrome === "undefined" ||
-      !chrome.storage ||
-      !chrome.storage.sync ||
-      typeof chrome.storage.sync.get !== "function" ||
-      typeof chrome.storage.sync.set !== "function"
-    ) {
-      return null;
-    }
-    return chrome.storage.sync;
-  }
-
-  function getRuntimeErrorMessage() {
-    if (typeof chrome === "undefined" || !chrome.runtime || !chrome.runtime.lastError) {
-      return "";
-    }
-    return chrome.runtime.lastError.message || "unknown-runtime-error";
   }
 
   function showStatus(message, isError) {
@@ -68,49 +49,43 @@
     updateOptionSelectionState();
   }
 
-  function loadMode() {
-    const storage = getSyncStorage();
-    if (!storage) {
+  async function loadMode() {
+    if (!extensionBridge || typeof extensionBridge.storageGet !== "function") {
       showStatus("Storage API is unavailable.", true);
       setSelectedMode(DEFAULT_FORCED_MODE);
       return;
     }
 
-    storage.get({ [STORAGE_KEY_FORCED_MODE]: DEFAULT_FORCED_MODE }, (items) => {
-      const runtimeError = getRuntimeErrorMessage();
-      if (runtimeError) {
-        showStatus(`Failed to load setting: ${runtimeError}`, true);
-        setSelectedMode(DEFAULT_FORCED_MODE);
-        return;
-      }
-
+    try {
+      const items = await extensionBridge.storageGet(STORAGE_KEY_FORCED_MODE, DEFAULT_FORCED_MODE);
       const mode = normalizeMode(items ? items[STORAGE_KEY_FORCED_MODE] : DEFAULT_FORCED_MODE);
       setSelectedMode(mode);
       showStatus("", false);
-    });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "unknown-runtime-error";
+      showStatus(`Failed to load setting: ${errorMessage}`, true);
+      setSelectedMode(DEFAULT_FORCED_MODE);
+    }
   }
 
-  function saveMode(mode) {
-    const storage = getSyncStorage();
-    if (!storage) {
+  async function saveMode(mode) {
+    if (!extensionBridge || typeof extensionBridge.storageSet !== "function") {
       showStatus("Storage API is unavailable.", true);
       return;
     }
 
-    storage.set({ [STORAGE_KEY_FORCED_MODE]: mode }, () => {
-      const runtimeError = getRuntimeErrorMessage();
-      if (runtimeError) {
-        showStatus(`Failed to save setting: ${runtimeError}`, true);
-        return;
-      }
-
+    try {
+      await extensionBridge.storageSet({ [STORAGE_KEY_FORCED_MODE]: mode });
       showStatus("Saved.", false);
       setTimeout(() => {
         if (statusElement && statusElement.textContent === "Saved.") {
           showStatus("", false);
         }
       }, 1200);
-    });
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : "unknown-runtime-error";
+      showStatus(`Failed to save setting: ${errorMessage}`, true);
+    }
   }
 
   function setupEvents() {
@@ -128,11 +103,11 @@
       }
 
       const mode = normalizeMode(target.value);
-      saveMode(mode);
+      void saveMode(mode);
       updateOptionSelectionState();
     });
   }
 
   setupEvents();
-  loadMode();
+  void loadMode();
 })();

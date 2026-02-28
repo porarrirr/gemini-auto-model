@@ -20,6 +20,7 @@
         "https://gemini.google.com/*"
       ],
       "js": [
+        "extension-api.js",
         "content.js"
       ],
       "run_at": "document_idle"

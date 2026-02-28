@@ -38,12 +38,13 @@ This Firefox extension automatically switches the selected model on `https://gem
 ## Files
 
 - `manifest.json`: Firefox extension manifest (MV3).
+- `extension-api.js`: runtime + storage compatibility adapter.
 - `content.js`: DOM observer + model-switch logic.
 - `popup.html`: toolbar popup for quick mode switching.
-- `popup.js`: popup read/save logic via `chrome.storage.sync`.
+- `popup.js`: popup read/save logic via adapter-backed storage.
 - `popup.css`: popup styling.
 - `options.html`: extension options page.
-- `options.js`: options read/save logic via `chrome.storage.sync`.
+- `options.js`: options read/save logic via adapter-backed storage.
 - `options.css`: options page styling.
 - `icons/.gitkeep`: placeholder folder for optional future icons.
 

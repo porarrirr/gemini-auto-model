@@ -1,0 +1,8 @@
+build/
+ios/.project-path
+ios/**/*.xcodeproj
+ios/**/*.xcworkspace
+ios/**/*.xcuserdata
+ios/**/*.xcuserstate
+ios/**/*.xcarchive
+

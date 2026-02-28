@@ -1,0 +1,41 @@
+name: iOS Unsigned Archive
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-ios-unsigned-archive:
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare Safari Web Extension project
+        id: prepare
+        env:
+          IOS_APP_NAME: Gemini Mode Switcher
+          IOS_BUNDLE_ID: com.example.geminimodeswitcher
+        run: bash scripts/ios/prepare-safari-project.sh
+
+      - name: Build unsigned iOS archive
+        id: build
+        env:
+          IOS_PROJECT_PATH: ${{ steps.prepare.outputs.project_path }}
+          IOS_MIN_VERSION: "17.0"
+          IOS_TARGET_DEVICE_FAMILY: "1"
+        run: bash scripts/ios/build-unsigned-archive.sh
+
+      - name: Upload unsigned archive artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-unsigned-archive
+          path: |
+            ${{ steps.build.outputs.archive_path }}
+            ${{ steps.build.outputs.build_log_path }}
+          if-no-files-found: error
+

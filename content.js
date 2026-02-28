@@ -31,6 +31,7 @@
     lastConfirmedMode: null,
     lastConfirmedAt: 0
   };
+  const extensionBridge = globalThis.__geminiExt || null;
 
   const modelButtonSelectors = [
     'button[aria-haspopup="menu"]',
@@ -139,43 +140,20 @@
     return getModeTargetRegex(mode).test(normalizeText(text));
   }
 
-  function getSyncStorage() {
-    if (
-      typeof chrome === "undefined" ||
-      !chrome.storage ||
-      !chrome.storage.sync ||
-      typeof chrome.storage.sync.get !== "function"
-    ) {
-      return null;
-    }
-    return chrome.storage.sync;
-  }
-
-  function getRuntimeErrorMessage() {
-    if (typeof chrome === "undefined" || !chrome.runtime || !chrome.runtime.lastError) {
-      return "";
-    }
-    return chrome.runtime.lastError.message || "unknown-runtime-error";
-  }
-
-  function loadForcedMode() {
-    const storage = getSyncStorage();
-    if (!storage) {
-      return Promise.resolve(DEFAULT_FORCED_MODE);
+  async function loadForcedMode() {
+    if (!extensionBridge || typeof extensionBridge.storageGet !== "function") {
+      return DEFAULT_FORCED_MODE;
     }
 
-    return new Promise((resolve) => {
-      storage.get({ [STORAGE_KEY_FORCED_MODE]: DEFAULT_FORCED_MODE }, (items) => {
-        const runtimeError = getRuntimeErrorMessage();
-        if (runtimeError) {
-          log("debug", `Failed to load forced mode from storage: ${runtimeError}.`);
-          resolve(DEFAULT_FORCED_MODE);
-          return;
-        }
-        const savedMode = items ? items[STORAGE_KEY_FORCED_MODE] : DEFAULT_FORCED_MODE;
-        resolve(normalizeForcedMode(savedMode));
-      });
-    });
+    try {
+      const items = await extensionBridge.storageGet(STORAGE_KEY_FORCED_MODE, DEFAULT_FORCED_MODE);
+      const savedMode = items ? items[STORAGE_KEY_FORCED_MODE] : DEFAULT_FORCED_MODE;
+      return normalizeForcedMode(savedMode);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      log("debug", `Failed to load forced mode from storage: ${errorMessage}.`);
+      return DEFAULT_FORCED_MODE;
+    }
   }
 
   async function refreshForcedMode() {
@@ -185,17 +163,12 @@
   }
 
   function setupStorageListener() {
-    if (
-      typeof chrome === "undefined" ||
-      !chrome.storage ||
-      !chrome.storage.onChanged ||
-      typeof chrome.storage.onChanged.addListener !== "function"
-    ) {
+    if (!extensionBridge || typeof extensionBridge.addStorageChangedListener !== "function") {
       return;
     }
 
-    chrome.storage.onChanged.addListener((changes, areaName) => {
-      if (areaName !== "sync") {
+    const listenerAdded = extensionBridge.addStorageChangedListener((changes, areaName) => {
+      if (areaName !== "sync" && areaName !== "local") {
         return;
       }
       if (!changes[STORAGE_KEY_FORCED_MODE]) {
@@ -213,6 +186,10 @@
       log("info", `Forced mode changed to ${getModeLabel(changedMode)}.`);
       scheduleRecheck("forced-mode-changed", 150);
     });
+
+    if (!listenerAdded) {
+      log("debug", "Storage change listener could not be attached.");
+    }
   }
 
   function isElementVisible(element) {
