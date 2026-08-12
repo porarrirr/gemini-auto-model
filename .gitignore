@@ -1,10 +1,51 @@
+# Browser extension packages and generated output
 *.crx
+*.xpi
+*.zip
 build/
+dist/
+release/
+
+# Node tooling
+node_modules/
+coverage/
+*.log
+
+# Safari / Xcode generated files
 DerivedData/
+.build/
+.swiftpm/
 *.xcarchive
+*.ipa
+*.dSYM/
+*.dSYM.zip
+*.xcresult
 *.xcuserstate
 **/xcuserdata/
 ios/.project-path
 ios/**/*.xcodeproj
 ios/**/*.xcworkspace
+
+# Local keys and environment files
+*.pem
+*.p12
+*.mobileprovision
+.env
+.env.*
+!.env.example
+
+# Editors and OS files
+.idea/
+.vscode/
 .DS_Store
+._*
+*.swp
+*~
+
+# Temporary files
+.tmp/
+tmp/
+*.tmp
+*.bak
+*.orig
+*.rej
