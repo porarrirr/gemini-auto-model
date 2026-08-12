@@ -48,6 +48,8 @@ Default output:
 - `build/ios/geminicom-ios17-unsigned.xcarchive`
 - `build/ios/xcodebuild.log`
 
+Packaged `.crx` files are release artifacts and are not stored in the source tree. Use the unpacked-install instructions above for development, or download a packaged build from [GitHub Releases](https://github.com/porarrirr/gemini-auto-model/releases) when one is published.
+
 ## Settings UI
 
 - Toolbar popup: quick `Pro` / `Thinking` toggle
@@ -70,3 +72,18 @@ Default output:
 1. Open Gemini page.
 2. Open DevTools/Web Inspector console.
 3. Filter logs by `[gemini-pro-auto-default]`.
+
+## Permissions and privacy
+
+This is an independent, unofficial extension and is not made, endorsed, or supported by Google or the Gemini team. Gemini's interface can change without notice and may break the selector logic.
+
+The extension requests only:
+
+- `storage`, to save the selected mode in browser extension storage;
+- access to `https://gemini.google.com/*`, to inspect the Gemini page and operate its model picker.
+
+The extension does not add analytics, telemetry, or its own remote server. Its content script can read and modify the Gemini page because that access is required to change the selected model. Conversations remain subject to Gemini and browser data handling; review the source and permissions before installing.
+
+## License
+
+No license is currently granted for this repository's original code.
