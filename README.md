@@ -1,88 +1,38 @@
-# Gemini Pro Auto Default (Chrome / Firefox / Safari iOS build-ready)
+# Gemini Auto Model
 
-This extension automatically switches the selected Gemini model on `https://gemini.google.com/`.
+English | [日本語](README.ja.md)
 
-## What it does
+A browser extension that keeps a selected Gemini model mode active on `gemini.google.com`. Choose Pro or Thinking once, and the extension checks the current selection as you navigate Gemini.
 
-- Runs on every page at `gemini.google.com`.
-- Lets you choose a forced mode: `Pro` or `Thinking`.
-- Detects current model and only opens the picker if a switch is needed.
-- Re-checks on SPA navigation and DOM changes.
-- Fails silently when target mode is missing (console logs only).
+## Features
 
-## Browser installs
+- Force either Pro or Thinking mode
+- Re-check after Gemini's in-page navigation and interface updates
+- Avoid opening the model picker when the requested mode is already active
+- Configure the mode from the toolbar popup or options page
+- Support Chrome, Firefox, and an iOS Safari host-app build workflow
 
-### Chrome (unpacked)
+## Install
+
+### Chrome
 
 1. Open `chrome://extensions`.
-2. Enable `Developer mode`.
-3. Click **Load unpacked** and choose this repo folder.
-4. Open `https://gemini.google.com/` and verify behavior.
+2. Enable **Developer mode**.
+3. Select **Load unpacked** and choose this repository.
 
-### Firefox (temporary add-on)
+### Firefox
 
 1. Open `about:debugging#/runtime/this-firefox`.
-2. Click **Load Temporary Add-on...**.
-3. Select `firefox/manifest.json`.
-4. Open `https://gemini.google.com/` and verify behavior.
+2. Select **Load Temporary Add-on**.
+3. Choose `firefox/manifest.json`.
 
-## iOS Safari packaging (iPhone, iOS 17+)
-
-This repo includes macOS scripts and CI workflow to generate an unsigned iOS archive for a Safari Web Extension host app.
-
-- Local docs: `docs/ios-safari.md`
-- CI workflow: `.github/workflows/ios-unsigned-build.yml`
-- Converter/build scripts:
-  - `scripts/ios/prepare-safari-project.sh`
-  - `scripts/ios/build-unsigned-archive.sh`
-
-### Quick local commands (macOS)
-
-```bash
-bash scripts/ios/prepare-safari-project.sh
-bash scripts/ios/build-unsigned-archive.sh
-```
-
-Default output:
-
-- `build/ios/geminicom-ios17-unsigned.xcarchive`
-- `build/ios/xcodebuild.log`
-
-Packaged `.crx` files are release artifacts and are not stored in the source tree. Use the unpacked-install instructions above for development, or download a packaged build from [GitHub Releases](https://github.com/porarrirr/gemini-auto-model/releases) when one is published.
-
-## Settings UI
-
-- Toolbar popup: quick `Pro` / `Thinking` toggle
-- Options page: persistent setting with auto-save
-- Storage behavior: tries `sync`, falls back to `local` automatically for compatibility
-
-## Files
-
-- `manifest.json`: Chrome/WebExtension manifest (MV3)
-- `extension-api.js`: runtime + storage compatibility adapter (`browser`/`chrome`, `sync`/`local`)
-- `content.js`: model detection and auto-switch runtime logic
-- `popup.*`: toolbar popup UI and logic
-- `options.*`: options page UI and logic
-- `firefox/`: Firefox manifest + same runtime/UI scripts
-- `docs/ios-safari.md`: iPhone Safari setup and troubleshooting guide
-- `scripts/ios/`: Safari converter + unsigned archive scripts
-
-## Debugging
-
-1. Open Gemini page.
-2. Open DevTools/Web Inspector console.
-3. Filter logs by `[gemini-pro-auto-default]`.
+Packaged builds may be published on [GitHub Releases](https://github.com/porarrirr/gemini-auto-model/releases). iOS Safari build instructions are available in [`docs/ios-safari.md`](docs/ios-safari.md).
 
 ## Permissions and privacy
 
-This is an independent, unofficial extension and is not made, endorsed, or supported by Google or the Gemini team. Gemini's interface can change without notice and may break the selector logic.
+The extension uses browser storage to remember the selected mode and page access to `https://gemini.google.com/*` so it can operate the model picker. It adds no analytics, telemetry, or separate remote server.
 
-The extension requests only:
-
-- `storage`, to save the selected mode in browser extension storage;
-- access to `https://gemini.google.com/*`, to inspect the Gemini page and operate its model picker.
-
-The extension does not add analytics, telemetry, or its own remote server. Its content script can read and modify the Gemini page because that access is required to change the selected model. Conversations remain subject to Gemini and browser data handling; review the source and permissions before installing.
+This is an independent, unofficial extension and is not made, endorsed, or supported by Google or the Gemini team. Gemini interface changes may break its behavior.
 
 ## License
 
